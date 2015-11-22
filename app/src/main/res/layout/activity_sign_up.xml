@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <include layout="@layout/tmpl_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/darkness"
+            android:textStyle="bold"/>
+
+        <include
+            layout="@layout/separator_line_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/edt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_phone"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/darkness"
+            android:textStyle="bold"/>
+
+        <include
+            layout="@layout/separator_line_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"/>
+
+
+        <EditText
+            android:id="@+id/edt_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            android:inputType="phone"/>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_email"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/darkness"
+            android:textStyle="bold"/>
+
+        <include
+            layout="@layout/separator_line_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"/>
+
+
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                style="@style/red_button_style"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:text="@string/sign_up"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

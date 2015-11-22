@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlidingTabLayout">
+        <attr name="normal_tab_title_color" format="color"/>
+        <attr name="selected_tab_title_color" format="color"/>
+        <attr name="selected_tab_indicator_color" format="color"/>
+    </declare-styleable>
+</resources>

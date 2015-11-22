@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/red"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/action_bar_menu_icon_margin"
+        android:src="@drawable/ic_menu_white_24dp"/>
+    <!-- TODO Localization -->
+    <TextView
+        android:id="@+id/tv_selected_location"
+        style="@style/text_style_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/action_bar_menu_icon_margin"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_menu"
+        android:drawablePadding="5dp"
+        android:text="No Location"/>
+
+    <TextView
+        android:id="@+id/tv_selected_state"
+        style="@style/text_style_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_selected_location"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="@dimen/action_bar_menu_icon_margin"
+        android:layout_toRightOf="@id/iv_menu"
+        android:text=""/>
+
+    <ImageView
+        android:id="@+id/iv_action_multiple"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/selector_share_btn"/>
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="SAVE"
+        android:visibility="gone"
+        style="@style/text_style_2"
+       />
+
+
+</RelativeLayout>

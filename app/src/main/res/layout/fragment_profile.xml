@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/parentLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_profile_image"/>
+
+        <EditText
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_profile"
+            android:background="@color/white"
+            android:hint="@string/add_name"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+    </RelativeLayout>
+
+    <include
+        layout="@layout/separator_line_red"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separator_red_height"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/tv_contact_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_information"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/red"/>
+
+      <!--  <ImageView
+            android:id="@+id/iv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_contact_information"
+            android:src="@drawable/ic_envelop"/>-->
+
+        <EditText
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@id/tv_contact_information"
+            android:drawableLeft="@drawable/ic_envelop"
+            android:drawablePadding="15dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@color/white"
+            android:hint="@string/add_email"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+     <!--   <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_email"-->
+            android:src="@drawable/ic_phone"/>
+
+        <EditText
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_email"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="15dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@color/white"
+            android:hint="@string/add_phone"
+            android:inputType="phone"
+            android:clickable="false"
+            android:focusable="false"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <!--<ImageView
+            android:id="@+id/iv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_phone"
+            android:src="@drawable/ic_location"/>
+
+        <EditText
+            android:id="@+id/tv_street_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_phone"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/iv_location"
+            android:background="@color/white"
+            android:hint="@string/add_street"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <EditText
+            android:id="@+id/tv_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_street_address"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/iv_location"
+            android:background="@color/white"
+            android:hint="@string/add_city"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <EditText
+            android:id="@+id/tv_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_city"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/iv_location"
+            android:background="@color/white"
+            android:hint="@string/add_state"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <EditText
+            android:id="@+id/tv_pin_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_state"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/iv_phone"
+            android:background="@color/white"
+            android:hint="@string/add_pin"/>-->
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/separator_line_red"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separator_red_height"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"/>
+</LinearLayout>

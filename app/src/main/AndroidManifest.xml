@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.shopchat.consumer"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name="com.shopchat.consumer.ShopChatApplication"
+        android:largeHeap="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.shopchat.consumer.activities.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.shopchat.consumer.activities.LandingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|adjustResize"></activity>
+        <activity
+            android:name=".activities.ProductListActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.shopchat.consumer.activities.LandingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.shopchat.consumer.activities.RetailerListActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.ProductListActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.shopchat.consumer.activities.LocationActivity"
+            android:parentActivityName="com.shopchat.consumer.activities.CityActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.CityActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ChatBoardActivity"
+            android:parentActivityName=".activities.RetailerListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activities.OTPActivity"
+            android:screenOrientation="portrait"/>
+
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4ed06f420565314de8d11950ee9fb38d6812993e"/>
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</manifest>

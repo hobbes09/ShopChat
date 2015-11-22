@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="darkness">#354447</color>
+    <color name="steel">#525C5E</color>
+    <color name="snap_pea">#00A162</color>
+    <color name="emerald">#038E55</color>
+    <color name="tangerine">#FF9900</color>
+    <color name="creamsicle">#FAAA4A</color>
+    <color name="pewter">#666666</color>
+    <color name="dr_evil">#8E8E8E</color>
+    <color name="brainstorm">#E4E4E4</color>
+    <color name="cloud">#F2F2F2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#eb2641</color>
+    <color name="grey_light">#FAFAFA</color>
+    <color name="semi_transparent">#40000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Lokal Chat</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="chat_fragment">CHATS</string>
+    <string name="home_fragment">HOME</string>
+    <string name="profile_fragment">PROFILE</string>
+    <string name="search">Search</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="contact_information">Contact Information</string>
+    <string name="add_email">Add your email</string>
+    <string name="add_phone">Add your phone number</string>
+    <string name="add_street">Street address</string>
+    <string name="add_city">City</string>
+    <string name="add_state">State</string>
+    <string name="add_pin">Pin Code</string>
+    <string name="add_name">Add your name</string>
+    <string name="pick_city">PICK A CITY</string>
+    <string name="select_location">Select Location</string>
+    <string name="search_city">Search your city</string>
+    <string name="search_locality">Search your locality</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="exit_msg">Are you sure want to exit?</string>
+    <string name="please_pick_location">Please pick a location!</string>
+    <string name="next">Next</string>
+    <string name="choose_retailer">Please choose at least one retailer.</string>
+    <string name="enter_text">Please enter text!</string>
+    <string name="no_data">No data found!</string>
+    <string name="error_no_network">Your Network seems to be disable</string>
+    <string name="error_server">There is some thing went wrong with Network/Server. Please try again! </string>
+    <string name="enter_phone">Enter your phone number</string>
+    <string name="send_code">Send confirmation code</string>
+    <string name="enter_confirmation_code">Enter confirmation code</string>
+    <string name="confirmation_code">Confirmation code</string>
+    <string name="otp_disclaimer_text">By tapping "Send confirmation code" above, ShopChat will send you a SMS message to confirm your phone number. Message and data rates may apply.</string>
+    <string name="phone_digit_validation">Phone number must be 10 digits.</string>
+    <string name="phone_number_mandatory">Entering phone number is mandatory!</string>
+    <string name="invalid_email">Invalid email address!</string>
+    <string name="login">Login</string>
+    <string name="resend_code">Resend Confirmation code</string>
+    <string name="enter_OTP_code">Please enter OTP!</string>
+    <string name="otp_not_match">OTP doesn\'t match, try again!</string>
+    <string name="otp_sending_failed">OTP sending failed. Please try again!</string>
+    <string name="reply_pending">Reply pending</string>
+</resources>

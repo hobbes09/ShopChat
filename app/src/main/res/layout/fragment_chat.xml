@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/swipe_refresh_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <include layout="@layout/tmpl_search_bar"/>
+
+
+        <ListView
+            android:id="@+id/lv_chat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="multipleChoice"
+            android:divider="@null"
+            android:elevation="50dp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- TODO Localization -->
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No data found!"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="22sp"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/fl_load_more"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/semi_transparent"
+        android:visibility="gone">
+        <!-- TODO Localization -->
+        <TextView
+            android:id="@+id/tv_load_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="Load More"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"/>
+
+        <ProgressBar
+            android:id="@+id/load_more_progress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_toRightOf="@id/tv_load_more"/>
+    </RelativeLayout>
+
+
+</FrameLayout>

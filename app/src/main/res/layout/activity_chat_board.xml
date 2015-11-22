@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+
+    <include layout="@layout/tmpl_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/brainstorm"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/lv_chat_board"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/transparent"
+            android:dividerHeight="10dp"
+            android:listSelector="@color/transparent"
+            android:padding="10dp"
+            android:scrollbars="none"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_send_chat"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/cloud"
+        android:orientation="horizontal"
+        android:padding="5dp">
+        <!-- TODO Localization -->
+        <Button
+            android:id="@+id/btn_faq"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/btn_faq"
+            android:text="FAQ"
+            android:textColor="@color/white"/>
+
+        <!-- TODO Localization -->
+        <EditText
+            android:id="@+id/edt_chat_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rounded_rect"
+            android:hint="Talk to us"
+            android:paddingLeft="10dp"/>
+        <!-- TODO Localization -->
+        <Button
+            android:id="@+id/btn_send_chat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/ic_send_chat"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+    </LinearLayout>
+</LinearLayout>

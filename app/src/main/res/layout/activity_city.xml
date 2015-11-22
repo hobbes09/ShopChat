@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
+
+    <include layout="@layout/tmpl_toolbar"/>
+
+    <include layout="@layout/tmpl_search_bar"/>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/pick_city"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"/>
+    </FrameLayout>
+
+    <include layout="@layout/separator_line_grey"/>
+
+    <ListView
+        android:id="@+id/lv_city"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:choiceMode="multipleChoice"
+        android:divider="@null"
+        android:elevation="50dp"/>
+
+</LinearLayout>
