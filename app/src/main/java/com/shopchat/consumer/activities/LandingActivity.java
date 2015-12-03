@@ -9,11 +9,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.shopchat.consumer.R;
 import com.shopchat.consumer.adapters.HomePageFragmentAdapter;
-import com.shopchat.consumer.fragments.ChatFragment;
+//import com.shopchat.consumer.fragments.ChatFragment;
 import com.shopchat.consumer.fragments.HomeFragment;
+import com.shopchat.consumer.fragments.InboxFragment;
 import com.shopchat.consumer.fragments.ProfileFragment;
 import com.shopchat.consumer.fragments.ShopChatNavigationFragment;
 import com.shopchat.consumer.listener.ChatListener;
@@ -45,7 +47,7 @@ import java.util.TimerTask;
 /**
  * Created by Sudipta on 8/7/2015.
  */
-public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener {
+public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener {
 
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
@@ -58,7 +60,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
     private SaveClickListener saveClickListener;
     private ActionBarHome actionBarHome;
     private CustomProgress progressDialog;
-    private ChatAdapterListener chatAdapterListener;
+//    private ChatAdapterListener chatAdapterListener;
     private ProductModel productModel;
     private Timer timer;
 
@@ -90,7 +92,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         mNavigationDrawerFragment.closeNavigationDrawer();
 
         initViews();
-        initChatFetchTask("0", false, false);
+        // initChatFetchTask("0", false, false);
     }
 
     @Override
@@ -99,213 +101,213 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         actionBarHome = getActionBarHome();
         setUpSelectedLocation();
 
-        fetchChatPeriodically();
+        // fetchChatPeriodically();
     }
 
-    private void fetchChatPeriodically() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initNewMessageTask();
-                    }
-                });
-            }
-        }, 0, REFRESH_TIME);
-    }
+//    private void fetchChatPeriodically() {
+//        timer = new Timer();
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        initNewMessageTask();
+//                    }
+//                });
+//            }
+//        }, 0, REFRESH_TIME);
+//    }
 
-    private void initNewMessageTask() {
+//    private void initNewMessageTask() {
+//
+//        NewMessageCountListener newMessageCountListener = new NewMessageCountListener() {
+//            @Override
+//            public void onStart() {
+//
+//            }
+//
+//            @Override
+//            public void onSuccess(String response) {
+//                if (response.equalsIgnoreCase("0")) {
+//
+//                } else {
+//                    if (viewPager.getCurrentItem() == 0) {
+//                        initChatFetchTask("0", false, true);
+//                    } else {
+//                        initChatFetchTask("0", false, false);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(ErrorModel errorModel) {
+//                switch (errorModel.getErrorType()) {
+//                    case ERROR_TYPE_NO_NETWORK:
+//                        Utils.showNetworkDisableDialog(LandingActivity.this, errorModel.getErrorMessage());
+//                        break;
+//                    case ERROR_TYPE_SERVER:
+//                        Utils.showGenericDialog(LandingActivity.this, errorModel.getErrorMessage());
+//                        break;
+//                    default:
+//
+//                        break;
+//                }
+//            }
+//        };
+//
+//        NewMessageCountTask newMessageCountTask = new NewMessageCountTask(this, newMessageCountListener);
+//        newMessageCountTask.fetchNewMessage();
+//    }
 
-        NewMessageCountListener newMessageCountListener = new NewMessageCountListener() {
-            @Override
-            public void onStart() {
+    /*
+    Get fresh inbox data from server
+     */
+//    private void initChatFetchTask(final String pageCounter, final boolean isLoadMore, final boolean isFromAlertDialog) {
+//
+//        progressDialog = Utils.getProgressDialog(this);
+//        ChatListener chatListener = new ChatListener() {
+//            @Override
+//            public void onChatFetchStart() {
+//                // progressDialog.show();
+//            }
+//
+//            @Override
+//            public void onChatFetchSuccess(List<ProductModel> chatList) {
+//                //progressDialog.dismiss();
+//
+//                List<ChatDisplayModel> chatDisplayModelList = createInboxDisplayList(chatList);
+//
+//
+//                if (!isLoadMore) {
+//                    if (isFromAlertDialog) {
+//                        // TODO Localization
+//                        showNewMessageAvailableDialog(LandingActivity.this, "There is a new message available, would you like to read it?", chatList, chatDisplayModelList);
+//                    } else {
+//                        setChatData(chatList, chatDisplayModelList);
+//                        chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
+//                    }
+//
+//                } else {
+//                    addChatData(chatList, chatDisplayModelList);
+//                    chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onChatFetchFailure(ErrorModel errorModel) {
+//                // progressDialog.dismiss();
+//                chatAdapterListener.onChatFetchFailure(errorModel);
+//
+//            }
+//        };
+//
+//        ChatTask chatTask = new ChatTask(this, chatListener, pageCounter);
+//        chatTask.fetchChat();
+//    }
+//
+//    private void addChatData(List<ProductModel> chatList, List<ChatDisplayModel> chatDisplayModelList) {
+//        Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels().addAll(chatDisplayModelList);
+//        Utils.getShopChatApplication(LandingActivity.this).getChatList().addAll(chatList);
+//    }
+//
+//    private void setChatData(List<ProductModel> chatList, List<ChatDisplayModel> chatDisplayModelList) {
+//        Utils.getShopChatApplication(LandingActivity.this).setChatDisplayModels(chatDisplayModelList);
+//        Utils.getShopChatApplication(LandingActivity.this).setChatList(chatList);
+//    }
+//
+//
+//    ChatFragment.PageListener pageListener = new ChatFragment.PageListener() {
+//        @Override
+//        public void onLoadMore() {
+//            int currentPageNumber = Utils.getShopChatApplication(LandingActivity.this).getCurrentChatPageNumber() + 1;
+//            initChatFetchTask(String.valueOf(currentPageNumber), true, false);
+//        }
+//    };
+//
+//    private void storeAndDisplayChat(List<ChatDisplayModel> chatDisplayModelList) {
+//        List<ChatDisplayModel> cachedChatDisplayList = Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels();
+//
+//        if (cachedChatDisplayList != null && !cachedChatDisplayList.isEmpty()) {
+//
+//            for (ChatDisplayModel cachedChatDisplayModel : cachedChatDisplayList) {
+//                String replyContent = cachedChatDisplayModel.getRetailerConsolidatedChatContent();
+//                String productId = cachedChatDisplayModel.getProductId();
+//
+//                for (ChatDisplayModel chatDisplayModel : chatDisplayModelList) {
+//                    if (productId.equalsIgnoreCase(chatDisplayModel.getProductId())) {
+//                        if (!replyContent.equalsIgnoreCase(chatDisplayModel.getRetailerConsolidatedChatContent())) {
+//                            chatDisplayModel.setIsRead(true);
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
+//        Utils.getShopChatApplication(LandingActivity.this).setChatDisplayModels(chatDisplayModelList);
+//        chatAdapterListener.onChatFetchSuccess(chatDisplayModelList);
+//
+//    }
 
-            }
-
-            @Override
-            public void onSuccess(String response) {
-                if (response.equalsIgnoreCase("0")) {
-
-                } else {
-                    if (viewPager.getCurrentItem() == 0) {
-                        initChatFetchTask("0", false, true);
-                    } else {
-                        initChatFetchTask("0", false, false);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(ErrorModel errorModel) {
-                switch (errorModel.getErrorType()) {
-                    case ERROR_TYPE_NO_NETWORK:
-                        Utils.showNetworkDisableDialog(LandingActivity.this, errorModel.getErrorMessage());
-                        break;
-                    case ERROR_TYPE_SERVER:
-                        Utils.showGenericDialog(LandingActivity.this, errorModel.getErrorMessage());
-                        break;
-                    default:
-
-                        break;
-                }
-            }
-        };
-
-        NewMessageCountTask newMessageCountTask = new NewMessageCountTask(this, newMessageCountListener);
-        newMessageCountTask.fetchNewMessage();
-    }
-
-    private void initChatFetchTask(final String pageCounter, final boolean isLoadMore, final boolean isFromAlertDialog) {
-
-        progressDialog = Utils.getProgressDialog(this);
-        ChatListener chatListener = new ChatListener() {
-            @Override
-            public void onChatFetchStart() {
-                // progressDialog.show();
-            }
-
-            @Override
-            public void onChatFetchSuccess(List<ProductModel> chatList) {
-                //progressDialog.dismiss();
-
-                List<ChatDisplayModel> chatDisplayModelList = createInboxDisplayList(chatList);
-
-
-                if (!isLoadMore) {
-                    if (isFromAlertDialog) {
-                        // TODO Localization
-                        showNewMessageAvailableDialog(LandingActivity.this, "There is a new message available, would you like to read it?", chatList, chatDisplayModelList);
-                    } else {
-                        setChatData(chatList, chatDisplayModelList);
-                        chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
-                    }
-
-                } else {
-                    addChatData(chatList, chatDisplayModelList);
-                    chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onChatFetchFailure(ErrorModel errorModel) {
-                // progressDialog.dismiss();
-                chatAdapterListener.onChatFetchFailure(errorModel);
-
-
-            }
-        };
-
-        ChatTask chatTask = new ChatTask(this, chatListener, pageCounter);
-        chatTask.fetchChat();
-    }
-
-    private void addChatData(List<ProductModel> chatList, List<ChatDisplayModel> chatDisplayModelList) {
-        Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels().addAll(chatDisplayModelList);
-        Utils.getShopChatApplication(LandingActivity.this).getChatList().addAll(chatList);
-    }
-
-    private void setChatData(List<ProductModel> chatList, List<ChatDisplayModel> chatDisplayModelList) {
-        Utils.getShopChatApplication(LandingActivity.this).setChatDisplayModels(chatDisplayModelList);
-        Utils.getShopChatApplication(LandingActivity.this).setChatList(chatList);
-    }
-
-
-    ChatFragment.PageListener pageListener = new ChatFragment.PageListener() {
-        @Override
-        public void onLoadMore() {
-            int currentPageNumber = Utils.getShopChatApplication(LandingActivity.this).getCurrentChatPageNumber() + 1;
-            initChatFetchTask(String.valueOf(currentPageNumber), true, false);
-        }
-    };
-
-    private void storeAndDisplayChat(List<ChatDisplayModel> chatDisplayModelList) {
-        List<ChatDisplayModel> cachedChatDisplayList = Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels();
-
-        if (cachedChatDisplayList != null && !cachedChatDisplayList.isEmpty()) {
-
-            for (ChatDisplayModel cachedChatDisplayModel : cachedChatDisplayList) {
-                String replyContent = cachedChatDisplayModel.getRetailerConsolidatedChatContent();
-                String productId = cachedChatDisplayModel.getProductId();
-
-                for (ChatDisplayModel chatDisplayModel : chatDisplayModelList) {
-                    if (productId.equalsIgnoreCase(chatDisplayModel.getProductId())) {
-                        if (!replyContent.equalsIgnoreCase(chatDisplayModel.getRetailerConsolidatedChatContent())) {
-                            chatDisplayModel.setIsRead(true);
-                        }
-                    }
-                }
-
-            }
-        }
-        Utils.getShopChatApplication(LandingActivity.this).setChatDisplayModels(chatDisplayModelList);
-        chatAdapterListener.onChatFetchSuccess(chatDisplayModelList);
-
-    }
-
-    private List<ChatDisplayModel> createInboxDisplayList(List<ProductModel> chatList) {
-        List<ChatDisplayModel> chatDisplayModelList = new ArrayList<ChatDisplayModel>();
-
-
-        for (ProductModel productModel : chatList) {
-            ChatDisplayModel chatDisplayModel = new ChatDisplayModel();
-            chatDisplayModel.setProductId(productModel.getProductId());
-            chatDisplayModel.setProductName(productModel.getProductName());
-            StringBuilder stringBuilder = new StringBuilder();
-            for (RetailerModel retailerModel : productModel.getRetailerModels()) {
-                if (!retailerModel.getRetailerChatContent().isEmpty()) {
-                    stringBuilder.append(retailerModel.getRetailerChatContent());
-                    stringBuilder.append(" ");
-                }
-            }
-            chatDisplayModel.setConsumerChatContent(productModel.getConsumerChatContent());
-            chatDisplayModel.setRetailerConsolidatedChatContent(stringBuilder.toString());
-            chatDisplayModelList.add(chatDisplayModel);
-        }
-
-
-        return chatDisplayModelList;
-    }
-
-    private List<ChatDisplayModel> createChatDisplayList(MultiMap<String, ProductModel> chatMap) {
-        List<ChatDisplayModel> chatDisplayModelList = new ArrayList<ChatDisplayModel>();
-
-        Iterator iterator = chatMap.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            MultiValueMap.Entry entry = (MultiValueMap.Entry) iterator.next();
-
-            ArrayList<ProductModel> productList = (ArrayList) entry.getValue();
-            ChatDisplayModel chatDisplayModel = new ChatDisplayModel();
-            StringBuilder stringBuilder = new StringBuilder();
-            for (ProductModel productModel : productList) {
-                chatDisplayModel.setProductId(productModel.getProductId());
-                chatDisplayModel.setProductName(productModel.getProductName());
-                for (RetailerModel retailerModel : productModel.getRetailerModels()) {
-                    if (!retailerModel.getRetailerChatContent().isEmpty()) {
-                        stringBuilder.append(retailerModel.getRetailerChatContent());
-                        stringBuilder.append(" ");
-                    }
-                }
-
-               /* String latestTimeStamp = (productModel.getRetailerModels().get(productModel.getRetailerModels().size()-1)).getChatTimeStamp();
-                chatDisplayModel.setTimeStamp(latestTimeStamp);*/
-            }
-
-
-            chatDisplayModel.setRetailerConsolidatedChatContent(stringBuilder.toString());
-            chatDisplayModelList.add(chatDisplayModel);
-
-        }
-
-        return chatDisplayModelList;
-    }
+//    private List<ChatDisplayModel> createInboxDisplayList(List<ProductModel> chatList) {
+//        List<ChatDisplayModel> chatDisplayModelList = new ArrayList<ChatDisplayModel>();
+//
+//
+//        for (ProductModel productModel : chatList) {
+//            ChatDisplayModel chatDisplayModel = new ChatDisplayModel();
+//            chatDisplayModel.setProductId(productModel.getProductId());
+//            chatDisplayModel.setProductName(productModel.getProductName());
+//            StringBuilder stringBuilder = new StringBuilder();
+//            for (RetailerModel retailerModel : productModel.getRetailerModels()) {
+//                if (!retailerModel.getRetailerChatContent().isEmpty()) {
+//                    stringBuilder.append(retailerModel.getRetailerChatContent());
+//                    stringBuilder.append(" ");
+//                }
+//            }
+//            chatDisplayModel.setConsumerChatContent(productModel.getConsumerChatContent());
+//            chatDisplayModel.setRetailerConsolidatedChatContent(stringBuilder.toString());
+//            chatDisplayModelList.add(chatDisplayModel);
+//        }
+//
+//
+//        return chatDisplayModelList;
+//    }
+//
+//    private List<ChatDisplayModel> createChatDisplayList(MultiMap<String, ProductModel> chatMap) {
+//        List<ChatDisplayModel> chatDisplayModelList = new ArrayList<ChatDisplayModel>();
+//
+//        Iterator iterator = chatMap.entrySet().iterator();
+//
+//        while (iterator.hasNext()) {
+//            MultiValueMap.Entry entry = (MultiValueMap.Entry) iterator.next();
+//
+//            ArrayList<ProductModel> productList = (ArrayList) entry.getValue();
+//            ChatDisplayModel chatDisplayModel = new ChatDisplayModel();
+//            StringBuilder stringBuilder = new StringBuilder();
+//            for (ProductModel productModel : productList) {
+//                chatDisplayModel.setProductId(productModel.getProductId());
+//                chatDisplayModel.setProductName(productModel.getProductName());
+//                for (RetailerModel retailerModel : productModel.getRetailerModels()) {
+//                    if (!retailerModel.getRetailerChatContent().isEmpty()) {
+//                        stringBuilder.append(retailerModel.getRetailerChatContent());
+//                        stringBuilder.append(" ");
+//                    }
+//                }
+//
+//               /* String latestTimeStamp = (productModel.getRetailerModels().get(productModel.getRetailerModels().size()-1)).getChatTimeStamp();
+//                chatDisplayModel.setTimeStamp(latestTimeStamp);*/
+//            }
+//
+//
+//            chatDisplayModel.setRetailerConsolidatedChatContent(stringBuilder.toString());
+//            chatDisplayModelList.add(chatDisplayModel);
+//
+//        }
+//
+//        return chatDisplayModelList;
+//    }
 
 
     private void setUpSelectedLocation() {
@@ -328,10 +330,12 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
             adapter.setReuseFragments(false);
         }
 
-        ChatFragment chatFragment = new ChatFragment();
-        chatFragment.setPageListener(pageListener);
+//        ChatFragment chatFragment = new ChatFragment();
+//        chatFragment.setPageListener(pageListener);
 
-        adapter.addFragment(getString(R.string.chat_fragment), chatFragment);
+        InboxFragment inboxFragment = new InboxFragment();
+
+        adapter.addFragment(getString(R.string.chat_fragment), inboxFragment);
         adapter.addFragment(getString(R.string.home_fragment), new HomeFragment());
         adapter.addFragment(getString(R.string.profile_fragment), new ProfileFragment());
 
@@ -345,7 +349,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         productModel = this.getIntent().getParcelableExtra(PRODUCT);
         if (callingActivity != null && callingActivity.equalsIgnoreCase(ChatBoardActivity.class.toString()) && productModel != null) {
             viewPager.setCurrentItem(0);
-            initChatFetchTask("0", false, false);
+            // initChatFetchTask("0", false, false);
         } else {
             viewPager.setCurrentItem(1);
         }
@@ -369,8 +373,9 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
                     getActionBarHome().setVisibleFragment(null);
                 }
 
-                if (adapter.getItem(position) instanceof ChatFragment) {
+                if (adapter.getItem(position) instanceof InboxFragment) {
                     //initChatFetchTask();
+                    Toast.makeText(getApplicationContext(), "Page changed to inbox", Toast.LENGTH_SHORT).show();
                 }
 
                 Utils.hideKeyBoard(LandingActivity.this);
@@ -433,15 +438,15 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         void onSaveClick();
     }
 
-    public void setChatAdapterListener(ChatAdapterListener chatAdapterListener) {
-        this.chatAdapterListener = chatAdapterListener;
-    }
-
-    public interface ChatAdapterListener {
-        void onChatFetchSuccess(List<ChatDisplayModel> chatDisplayModels);
-
-        void onChatFetchFailure(ErrorModel errorModel);
-    }
+//    public void setChatAdapterListener(ChatAdapterListener chatAdapterListener) {
+//        this.chatAdapterListener = chatAdapterListener;
+//    }
+//
+//    public interface ChatAdapterListener {
+//        void onChatFetchSuccess(List<ChatDisplayModel> chatDisplayModels);
+//
+//        void onChatFetchFailure(ErrorModel errorModel);
+//    }
 
     @Override
     public void onBackPressed() {
@@ -538,16 +543,21 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         Utils.getShopChatApplication(this).getChatDisplayModels().clear();
     }
 
-    public void showNewMessageAvailableDialog(final Context context, String msg, final List<ProductModel> chatList, final List<ChatDisplayModel> chatDisplayModelList) {
-        new AlertDialog.Builder(context)
-                .setMessage(msg)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        setChatData(chatList, chatDisplayModelList);
-                        chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
-                    }
-                })
-                .show();
+//    public void showNewMessageAvailableDialog(final Context context, String msg, final List<ProductModel> chatList, final List<ChatDisplayModel> chatDisplayModelList) {
+//        new AlertDialog.Builder(context)
+//                .setMessage(msg)
+//                .setCancelable(false)
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        setChatData(chatList, chatDisplayModelList);
+//                        chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
+//                    }
+//                })
+//                .show();
+//    }
+
+    @Override
+    public void onInboxFragmentInteraction() {
+
     }
 }
