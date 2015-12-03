@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -47,7 +50,7 @@ import java.util.TimerTask;
 /**
  * Created by Sudipta on 8/7/2015.
  */
-public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener {
+public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<String> {
 
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
@@ -90,6 +93,9 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
         mNavigationDrawerFragment.closeNavigationDrawer();
+
+        // Initiate loader to start loading inbox data
+        getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_INBOX_DATA), null, this).forceLoad();
 
         initViews();
         // initChatFetchTask("0", false, false);
@@ -434,6 +440,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         this.saveClickListener = listener;
     }
 
+
     public interface SaveClickListener {
         void onSaveClick();
     }
@@ -555,6 +562,56 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 //                })
 //                .show();
 //    }
+
+
+    @Override
+    public Loader<String> onCreateLoader(int id, Bundle args) {
+        if(id == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
+            Toast.makeText(getApplicationContext(), "Inbox data loader initiated", Toast.LENGTH_SHORT).show();
+            InboxDataLoader inboxDataLoader = new InboxDataLoader(getApplicationContext());
+            return inboxDataLoader;
+        }else{
+            Toast.makeText(getApplicationContext(), "No resource could be located for loading..", Toast.LENGTH_SHORT).show();
+            NoResourceLoader noResourceLoader = new NoResourceLoader(getApplicationContext());
+            return noResourceLoader;
+        }
+
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String> loader, String data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<String> loader) {
+
+    }
+
+    private static class InboxDataLoader extends AsyncTaskLoader<String>{
+
+        public InboxDataLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public String loadInBackground() {
+            return "";
+        }
+    }
+
+    private static class NoResourceLoader extends AsyncTaskLoader<String>{
+
+        public NoResourceLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public String loadInBackground() {
+            return null;
+        }
+    }
 
     @Override
     public void onInboxFragmentInteraction() {
