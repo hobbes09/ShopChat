@@ -152,7 +152,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public ArrayList<QuestionEntity> getAllQuestionEntities() {
         ArrayList<QuestionEntity> questionEntities = new ArrayList<QuestionEntity>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_QUESTION;
+        String selectQuery = "SELECT * FROM " + TABLE_QUESTION + " ORDER BY " + KEY_QUESTION_UPDATED_AT + " DESC";
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(selectQuery, null);
@@ -173,7 +173,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
     // Getting  question count
     public int getQuestionCount() {
         int count = 0;
-        String countQuery = "SELECT  * FROM " + TABLE_QUESTION;
+        String countQuery = "SELECT  * FROM " + TABLE_QUESTION + " ORDER BY " + KEY_ANSWER_UPDATED_AT + " ASC";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(countQuery, null);
         count = cursor.getCount();
