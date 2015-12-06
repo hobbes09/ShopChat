@@ -6,15 +6,12 @@ package com.shopchat.consumer.utils;
 public class Constants {
 
     public static String TAG = "ShopChat";
-    public static final String BLANK_TEXT = "";
-    //public static final String BASE_URL = "http://demo.codeofaninja.com";
     public static final String BASE_URL = "http://shopchat-dev-env.elasticbeanstalk.com";
     public static final String CATEGORY_URL = "/products/getCategories.json";
     public static final String PRODUCT_URL = "/products/getProducts.json";
     public static final String CITY_URL = "/useroperation/getAllCities.json";
     public static final String LOCATION_URL = "/useroperation/getLocality.json";
     public static final String RETAILER_URL = "/products/getRetailersByProductName.json";
-    //public static final String CHAT_URL = "/useroperation/getUserDashBoardData.json";
     public static final String CHAT_URL = "/useroperation/getAllQuestion.json";
     public static final String CHAT_SUBMIT_URL = "/useroperation/submitQuestion.json";
     public static final String OTP_REGISTRATION_URL = "/user/registration.json";
