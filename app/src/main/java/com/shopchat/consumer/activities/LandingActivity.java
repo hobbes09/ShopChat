@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.shopchat.consumer.R;
@@ -24,11 +25,15 @@ import com.shopchat.consumer.fragments.ShopChatNavigationFragment;
 import com.shopchat.consumer.listener.ChatListener;
 import com.shopchat.consumer.listener.CityListener;
 import com.shopchat.consumer.listener.NewMessageCountListener;
+import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.models.ChatDisplayModel;
 import com.shopchat.consumer.models.CityModel;
 import com.shopchat.consumer.models.ErrorModel;
 import com.shopchat.consumer.models.ProductModel;
 import com.shopchat.consumer.models.RetailerModel;
+import com.shopchat.consumer.models.entities.AnswerEntity;
+import com.shopchat.consumer.models.entities.QuestionEntity;
+import com.shopchat.consumer.services.InboxDataService;
 import com.shopchat.consumer.task.ChatTask;
 import com.shopchat.consumer.task.CityTask;
 import com.shopchat.consumer.task.NewMessageCountTask;
@@ -52,6 +57,7 @@ import java.util.TimerTask;
  */
 public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<String> {
 
+    public static Context mLandingActivityContext;
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
     public static String PRODUCT_ID = "product_id";
@@ -63,10 +69,10 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
     private SaveClickListener saveClickListener;
     private ActionBarHome actionBarHome;
     private CustomProgress progressDialog;
-//    private ChatAdapterListener chatAdapterListener;
+    //private ChatAdapterListener chatAdapterListener;
     private ProductModel productModel;
     private Timer timer;
-
+    private DataBaseManager dataBaseManager;
 
     public static Intent getIntent(Context context, String callingActivity, ProductModel productModel) {
         Intent intent = new Intent(context, LandingActivity.class);
@@ -86,6 +92,10 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mLandingActivityContext = LandingActivity.this;
+
+        dataBaseManager = new DataBaseManager(mLandingActivityContext);
+
         setUpSupportActionBar(true, false, "Home");
 
         mNavigationDrawerFragment = (ShopChatNavigationFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -100,6 +110,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         initViews();
         // initChatFetchTask("0", false, false);
     }
+
 
     @Override
     protected void onResume() {
@@ -581,7 +592,14 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
-
+        if(loader.getId() == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
+            ArrayList<QuestionEntity> questionEntities = dataBaseManager.getAllQuestionEntities();
+            String str = "";
+            for(int qeIndex = 0; qeIndex < questionEntities.size(); qeIndex++){
+                str += (questionEntities.get(qeIndex).getQuestionText() + "-----");
+            }
+            Log.v("All_Questions", str);
+        }
     }
 
     @Override
@@ -597,6 +615,10 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 
         @Override
         public String loadInBackground() {
+            InboxDataService inboxDataService = new InboxDataService();
+            inboxDataService.setContext(LandingActivity.mLandingActivityContext);
+            inboxDataService.setPageNumber(0);
+            inboxDataService.fetchAllQuestionDataForInbox();
             return "";
         }
     }
