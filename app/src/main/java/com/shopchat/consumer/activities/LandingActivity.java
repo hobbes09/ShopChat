@@ -3,6 +3,7 @@ package com.shopchat.consumer.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -58,10 +59,11 @@ import java.util.TimerTask;
 public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<String> {
 
     public static Context mLandingActivityContext;
+    public static Resources resources;
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
     public static String PRODUCT_ID = "product_id";
-    public static final int REFRESH_TIME = 60000;
+    public static final int REFRESH_TIME = 20000;
     private SlidingTabLayout slidingTabLayout;
     private ViewPager viewPager;
     private ShopChatNavigationFragment mNavigationDrawerFragment;
@@ -93,6 +95,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         setContentView(R.layout.activity_home);
 
         mLandingActivityContext = LandingActivity.this;
+        resources = getResources();
 
         dataBaseManager = new DataBaseManager(mLandingActivityContext);
 
@@ -561,18 +564,6 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         Utils.getShopChatApplication(this).getChatDisplayModels().clear();
     }
 
-//    public void showNewMessageAvailableDialog(final Context context, String msg, final List<ProductModel> chatList, final List<ChatDisplayModel> chatDisplayModelList) {
-//        new AlertDialog.Builder(context)
-//                .setMessage(msg)
-//                .setCancelable(false)
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        setChatData(chatList, chatDisplayModelList);
-//                        chatAdapterListener.onChatFetchSuccess(Utils.getShopChatApplication(LandingActivity.this).getChatDisplayModels());
-//                    }
-//                })
-//                .show();
-//    }
 
 
     @Override
@@ -580,7 +571,12 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         if(id == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
             Toast.makeText(getApplicationContext(), "Inbox data loader initiated", Toast.LENGTH_SHORT).show();
             InboxDataLoader inboxDataLoader = new InboxDataLoader(getApplicationContext());
+            inboxDataLoader.setPageNumber(0);
             return inboxDataLoader;
+        }else if(id == getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA)){
+            Toast.makeText(getApplicationContext(), "Looking for new messages....", Toast.LENGTH_SHORT).show();
+            PollInboxDataLoader pollInboxDataLoader = new PollInboxDataLoader(getApplicationContext());
+            return pollInboxDataLoader;
         }else{
             Toast.makeText(getApplicationContext(), "No resource could be located for loading..", Toast.LENGTH_SHORT).show();
             NoResourceLoader noResourceLoader = new NoResourceLoader(getApplicationContext());
@@ -592,22 +588,32 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
+
         if(loader.getId() == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
-            ArrayList<QuestionEntity> questionEntities = dataBaseManager.getAllQuestionEntities();
-            String str = "";
-            for(int qeIndex = 0; qeIndex < questionEntities.size(); qeIndex++){
-                str += (questionEntities.get(qeIndex).getQuestionText() + "-----");
-            }
-            Log.v("All_Questions", str);
+            // Initiate loader to start loading inbox data
+            getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA), null, this).forceLoad();
+        }else if(loader.getId() == getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA)){
+            getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA), null, this).forceLoad();
         }
+
+
     }
 
     @Override
     public void onLoaderReset(Loader<String> loader) {
-
     }
 
     private static class InboxDataLoader extends AsyncTaskLoader<String>{
+
+        private int pageNumber;
+
+        public int getPageNumber() {
+            return pageNumber;
+        }
+
+        public void setPageNumber(int pageNumber) {
+            this.pageNumber = pageNumber;
+        }
 
         public InboxDataLoader(Context context) {
             super(context);
@@ -617,11 +623,46 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         public String loadInBackground() {
             InboxDataService inboxDataService = new InboxDataService();
             inboxDataService.setContext(LandingActivity.mLandingActivityContext);
-            inboxDataService.setPageNumber(0);
+            inboxDataService.setPageNumber(this.getPageNumber());
             inboxDataService.fetchAllQuestionDataForInbox();
             return "";
         }
     }
+
+    private static class PollInboxDataLoader extends AsyncTaskLoader<String>{
+
+        public PollInboxDataLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public String loadInBackground() {
+            int numNewMessage = 0;
+            InboxDataService inboxDataService = new InboxDataService();
+            inboxDataService.setContext(LandingActivity.mLandingActivityContext);
+            while (numNewMessage == 0){
+                try {
+                    Thread.sleep(REFRESH_TIME);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                numNewMessage = inboxDataService.getNumberOfUpdatedQuestions();
+                Log.v("LokatChat", "Number of new messages polled = " + String.valueOf(numNewMessage));
+            }
+            if(numNewMessage > 0){
+                Log.v("LokatChat", "Fetching new messages : " + String.valueOf(numNewMessage));
+                int numPages = (int)Math.ceil((double)numNewMessage/Constants.MESSAGE_BATCH_SIZE);
+                for(int pageNum = 0; pageNum < numPages; pageNum++){
+                    Log.v("LokatChat", "Fetching page number: " + String.valueOf(pageNum));
+                    inboxDataService.setPageNumber(pageNum);
+                    inboxDataService.fetchAllQuestionDataForInbox();
+                }
+
+            }
+            return null;
+        }
+    }
+
 
     private static class NoResourceLoader extends AsyncTaskLoader<String>{
 
