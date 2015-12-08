@@ -39,6 +39,8 @@ public class Constants {
     public static final String USER_NOT_FOUND = "UserNotFound";
     public static final String USER_EXISTS = "UserAlreadyExist";
 
+    public static final int MESSAGE_BATCH_SIZE = 5;
     public static int SELECTED_POSITION = -1;
+
 
 }

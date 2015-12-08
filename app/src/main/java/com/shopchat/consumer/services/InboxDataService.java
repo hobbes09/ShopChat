@@ -6,7 +6,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.shopchat.consumer.R;
 import com.shopchat.consumer.ShopChatApplication;
+import com.shopchat.consumer.activities.LandingActivity;
 import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.managers.SharedPreferenceManager;
 import com.shopchat.consumer.models.LoginModel;
@@ -38,6 +40,9 @@ public class InboxDataService {
     private Context context;
     private int pageNumber;
 
+    private int responseCode;
+    private String errorMessage;
+
     private DataBaseManager dataBaseManager;
 
     public HttpPostClient getHttpPostClient() {
@@ -64,6 +69,22 @@ public class InboxDataService {
         this.pageNumber = pageNumber;
     }
 
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     public boolean fetchAllQuestionDataForInbox(){
 
         httpPostClient = new HttpPostClient();
@@ -73,7 +94,7 @@ public class InboxDataService {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("pageNumber", this.pageNumber);
-            jsonObject.put("size", "5");
+            jsonObject.put("size", String.valueOf(Constants.MESSAGE_BATCH_SIZE));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -100,11 +121,22 @@ public class InboxDataService {
             AllQuestionsPojo allQuestionsPojo = gson.fromJson(reader, AllQuestionsPojo.class);
             extractAndStoreQuestionsFromPojo(allQuestionsPojo);
 
+            this.setResponseCode(httpPostClient.getResponseCode());
+            this.setErrorMessage("");
+
         }else {
             if(success){
-
+                Log.v("LokalChat", "URL:" + httpPostClient.getUrl());
+                Log.v("LokalChat", "ResponseCode:" + httpPostClient.getResponseCode());
+                Log.v("LokalChat", "Response:" + httpPostClient.getResponse());
+                this.setResponseCode(httpPostClient.getResponseCode());
+                this.setErrorMessage(LandingActivity.resources.getString(R.string.invalid_request));
             }else{
-
+                Log.v("LokalChat", "URL:" + httpPostClient.getUrl());
+                Log.v("LokalChat", "ResponseCode: 0");
+                Log.v("LokalChat", "Response: Cannot connect to network/server !");
+                this.setResponseCode(0);
+                this.setErrorMessage(LandingActivity.resources.getString(R.string.error_no_network));
             }
         }
 
@@ -190,6 +222,51 @@ public class InboxDataService {
 
 
         return false;
+    }
+
+    public int getNumberOfUpdatedQuestions(){
+        int newUpdates = 0;
+
+        httpPostClient = new HttpPostClient();
+        httpPostClient.setUrl(Constants.BASE_URL + Constants.NEW_MESSAGE_COUNT_URL);
+        String payload = "";
+
+        httpPostClient.setPayload(payload);
+
+        LoginModel loginModel = ((ShopChatApplication) this.context.getApplicationContext()).getLoginModel();
+
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Content-Length", String.valueOf(payload.length()));
+        headers.put("Cookie", loginModel.getCookieName() + "=" + loginModel.getCookieValue());
+
+        httpPostClient.setHeaders(headers);
+        boolean success = httpPostClient.sendPostRequest();
+
+        if(success && (httpPostClient.getResponseCode() == 200)){
+
+            String updateResponse = httpPostClient.getResponse();
+            newUpdates = Integer.valueOf(updateResponse);
+
+        }else {
+            if(success){
+                Log.v("LokalChat", "URL:" + httpPostClient.getUrl());
+                Log.v("LokalChat", "ResponseCode:" + httpPostClient.getResponseCode());
+                Log.v("LokalChat", "Response:" + httpPostClient.getResponse());
+                this.setResponseCode(httpPostClient.getResponseCode());
+                this.setErrorMessage(LandingActivity.resources.getString(R.string.invalid_request));
+            }else{
+                Log.v("LokalChat", "URL:" + httpPostClient.getUrl());
+                Log.v("LokalChat", "ResponseCode: 0");
+                Log.v("LokalChat", "Response: Cannot connect to network/server !");
+                this.setResponseCode(0);
+                this.setErrorMessage(LandingActivity.resources.getString(R.string.error_no_network));
+            }
+        }
+
+
+
+        return newUpdates;
     }
 
 }

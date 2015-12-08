@@ -515,12 +515,10 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     // Getting single RetailerEntity
     public RetailerEntity getRetailerEntityFromRetailerId(String retailerId) {
-        Log.v("Debug@@@>>>>>> ", "here");
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
         Cursor cursor = sqLiteDatabase.query(TABLE_RETAILER, new String[] { KEY_RETAILER_ID, KEY_RETAILER_SHOP_NAME}, KEY_RETAILER_ID + "=?",
                 new String[] { retailerId }, null, null, null, null);
-        Log.v("Debug@@@>>>>>>", Integer.toString(cursor.getCount()));
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
             RetailerEntity retailerEntity = new RetailerEntity(cursor.getString(0), cursor.getString(1));
