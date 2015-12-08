@@ -30,6 +30,7 @@
     <string name="no_data">No data found!</string>
     <string name="error_no_network">Your Network seems to be disable</string>
     <string name="error_server">There is some thing went wrong with Network/Server. Please try again! </string>
+    <string name="invalid_request">Your request parameters seems to be invalid. Please try again.</string>
     <string name="enter_phone">Enter your phone number</string>
     <string name="send_code">Send confirmation code</string>
     <string name="enter_confirmation_code">Enter confirmation code</string>
@@ -44,4 +45,7 @@
     <string name="otp_not_match">OTP doesn\'t match, try again!</string>
     <string name="otp_sending_failed">OTP sending failed. Please try again!</string>
     <string name="reply_pending">Reply pending</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

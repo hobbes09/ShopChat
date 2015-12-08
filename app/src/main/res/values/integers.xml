@@ -2,5 +2,6 @@
 <resources>
 
     <integer name="LOADER_INBOX_DATA">1</integer>
+    <integer name="LOADER_POLL_INBOX_DATA">2</integer>
 
 </resources>
