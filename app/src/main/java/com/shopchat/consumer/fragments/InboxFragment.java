@@ -2,20 +2,31 @@ package com.shopchat.consumer.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shopchat.consumer.R;
 import com.shopchat.consumer.ShopChatApplication;
+import com.shopchat.consumer.activities.LandingActivity;
+import com.shopchat.consumer.adapters.InboxMessageListAdapter;
 import com.shopchat.consumer.models.LoginModel;
+import com.shopchat.consumer.models.entities.InboxMessageEntity;
+import com.shopchat.consumer.services.InboxDataService;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,11 +36,12 @@ import com.shopchat.consumer.models.LoginModel;
  * Use the {@link InboxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InboxFragment extends Fragment {
+public class InboxFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<InboxMessageEntity>>{
 
     private OnFragmentInteractionListener mListener;
 
     private EditText edtText_search;
+    private ListView lvInboxMessageList;
 
     /**
      * Use this factory method to create a new instance of
@@ -37,8 +49,7 @@ public class InboxFragment extends Fragment {
 
      * @return A new instance of fragment InboxFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static InboxFragment newInstance(String param1, String param2) {
+    public static InboxFragment newInstance() {
         InboxFragment fragment = new InboxFragment();
         return fragment;
     }
@@ -63,14 +74,15 @@ public class InboxFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        LoginModel loginModel = ((ShopChatApplication) getActivity().getApplicationContext()).getLoginModel();
-//        Toast.makeText(getActivity(), loginModel.getCookieName() + "===" + loginModel.getCookieValue(), Toast.LENGTH_SHORT).show();
-
         initViews(view);
+        // Initializing the inbox list
+        LandingActivity.supportLoaderManager.initLoader(getResources()
+                .getInteger(R.integer.LOADER_ADAPTER_INBOX_MESSAGE), null, this).forceLoad();
 
     }
 
     private void initViews(View view) {
+        lvInboxMessageList = (ListView)view.findViewById(R.id.lvInboxMessageList);
         edtText_search = (EditText)view.findViewById(R.id.edtText_search);
         edtText_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -104,6 +116,48 @@ public class InboxFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public Loader<ArrayList<InboxMessageEntity>> onCreateLoader(int id, Bundle args) {
+        if(id == getResources().getInteger(R.integer.LOADER_ADAPTER_INBOX_MESSAGE)){
+            InboxMessageListLoader inboxMessageListLoader = new InboxMessageListLoader(LandingActivity.mLandingActivityContext);
+            return  inboxMessageListLoader;
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<InboxMessageEntity>> loader, ArrayList<InboxMessageEntity> data) {
+        if(loader.getId() == getResources().getInteger(R.integer.LOADER_ADAPTER_INBOX_MESSAGE)){
+            InboxMessageListAdapter inboxMessageListAdapter = new InboxMessageListAdapter(LandingActivity.mLandingActivityContext, data);
+            lvInboxMessageList.setAdapter(inboxMessageListAdapter);
+            // inboxMessageListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<InboxMessageEntity>> loader) {
+        loader = null;
+    }
+
+    private static class InboxMessageListLoader extends AsyncTaskLoader<ArrayList<InboxMessageEntity>>{
+
+        public InboxMessageListLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        public ArrayList<InboxMessageEntity> loadInBackground() {
+            ArrayList<InboxMessageEntity> inboxMessageEntities = new ArrayList<InboxMessageEntity>();
+
+            InboxDataService inboxDataService = new InboxDataService();
+            inboxDataService.setContext(LandingActivity.mLandingActivityContext);
+
+            inboxMessageEntities = inboxDataService.getListOfInboxMessageEntities();
+
+            return inboxMessageEntities;
+        }
     }
 
     /**
