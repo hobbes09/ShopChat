@@ -3,6 +3,7 @@ package com.shopchat.consumer.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.shopchat.consumer.listener.ChatListener;
 import com.shopchat.consumer.listener.CityListener;
 import com.shopchat.consumer.listener.NewMessageCountListener;
 import com.shopchat.consumer.managers.DataBaseManager;
+import com.shopchat.consumer.managers.SharedPreferenceManager;
 import com.shopchat.consumer.models.ChatDisplayModel;
 import com.shopchat.consumer.models.CityModel;
 import com.shopchat.consumer.models.ErrorModel;
@@ -59,6 +61,7 @@ import java.util.TimerTask;
 public class LandingActivity extends BaseActivity implements ActionBarHome.OnActionBarItemClickListener, InboxFragment.OnFragmentInteractionListener, LoaderManager.LoaderCallbacks<String> {
 
     public static Context mLandingActivityContext;
+    public static LoaderManager supportLoaderManager;
     public static Resources resources;
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
@@ -95,6 +98,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         setContentView(R.layout.activity_home);
 
         mLandingActivityContext = LandingActivity.this;
+        supportLoaderManager = getSupportLoaderManager();
         resources = getResources();
 
         dataBaseManager = new DataBaseManager(mLandingActivityContext);
@@ -596,7 +600,6 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
             getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA), null, this).forceLoad();
         }
 
-
     }
 
     @Override
@@ -625,6 +628,9 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
             inboxDataService.setContext(LandingActivity.mLandingActivityContext);
             inboxDataService.setPageNumber(this.getPageNumber());
             inboxDataService.fetchAllQuestionDataForInbox();
+            SharedPreferences.Editor editor = SharedPreferenceManager.getSharedPreferenceEditor(LandingActivity.mLandingActivityContext);
+            SharedPreferenceManager.setValueInSharedPreference(editor,
+                    SharedPreferenceManager.KEY_INBOX_LATEST_PAGE, String.valueOf(this.getPageNumber()));
             return "";
         }
     }
@@ -651,11 +657,14 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
             }
             if(numNewMessage > 0){
                 Log.v("LokatChat", "Fetching new messages : " + String.valueOf(numNewMessage));
+                SharedPreferences.Editor editor = SharedPreferenceManager.getSharedPreferenceEditor(LandingActivity.mLandingActivityContext);
                 int numPages = (int)Math.ceil((double)numNewMessage/Constants.MESSAGE_BATCH_SIZE);
                 for(int pageNum = 0; pageNum < numPages; pageNum++){
                     Log.v("LokatChat", "Fetching page number: " + String.valueOf(pageNum));
                     inboxDataService.setPageNumber(pageNum);
                     inboxDataService.fetchAllQuestionDataForInbox();
+                    SharedPreferenceManager.setValueInSharedPreference(editor,
+                            SharedPreferenceManager.KEY_INBOX_LATEST_PAGE, String.valueOf(pageNum));
                 }
 
             }
