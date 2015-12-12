@@ -13,6 +13,7 @@ import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.managers.SharedPreferenceManager;
 import com.shopchat.consumer.models.LoginModel;
 import com.shopchat.consumer.models.entities.AnswerEntity;
+import com.shopchat.consumer.models.entities.InboxMessageEntity;
 import com.shopchat.consumer.models.entities.ProductEntity;
 import com.shopchat.consumer.models.entities.QuestionEntity;
 import com.shopchat.consumer.models.entities.RetailerEntity;
@@ -29,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -36,12 +38,13 @@ import java.util.HashMap;
  */
 public class InboxDataService {
 
-    private HttpPostClient httpPostClient;
-    private Context context;
-    private int pageNumber;
+    private Context context;    // Must be initialised to use any service
+    private int pageNumber;     // Must be called to fetch data from Network
 
-    private int responseCode;
-    private String errorMessage;
+    private HttpPostClient httpPostClient;      // Self initialised
+
+    private int responseCode;       // Returned for network call methods
+    private String errorMessage;    // Returned for network call methods
 
     private DataBaseManager dataBaseManager;
 
@@ -267,6 +270,32 @@ public class InboxDataService {
 
 
         return newUpdates;
+    }
+
+    public ArrayList<InboxMessageEntity> getListOfInboxMessageEntities(){
+
+        ArrayList<InboxMessageEntity> inboxMessageEntities = new ArrayList<InboxMessageEntity>();
+        ArrayList<QuestionEntity> questionEntities = new ArrayList<QuestionEntity>();
+        QuestionEntity questionEntity;
+        InboxMessageEntity inboxMessageEntity;
+        ProductEntity productEntity;
+        // Initialising database manager
+        this.dataBaseManager = new DataBaseManager(getContext());
+
+        questionEntities = this.dataBaseManager.getAllQuestionEntities();
+        for(int index = 0; index < questionEntities.size(); index++){
+            questionEntity = questionEntities.get(index);
+            productEntity = new ProductEntity();
+            productEntity = this.dataBaseManager.getProductEntityFromProductId(questionEntity.getProductId());
+
+            inboxMessageEntity = new InboxMessageEntity();
+            inboxMessageEntity.setQuestionId(questionEntity.getQuestionId());
+            inboxMessageEntity.setMessageDetail(questionEntity.getQuestionText());
+            inboxMessageEntity.setMessageHeader(productEntity.getProductName());
+
+            inboxMessageEntities.add(inboxMessageEntity);
+        }
+        return inboxMessageEntities;
     }
 
 }
