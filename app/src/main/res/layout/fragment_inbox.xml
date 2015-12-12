@@ -12,6 +12,12 @@
 
         <include layout="@layout/tmpl_search_bar"/>
 
+        <ListView
+            android:id="@+id/lvInboxMessageList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
     </LinearLayout>
 
 </FrameLayout>
