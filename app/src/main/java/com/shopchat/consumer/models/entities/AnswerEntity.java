@@ -6,20 +6,21 @@ package com.shopchat.consumer.models.entities;
 public class AnswerEntity {
 
     private String answerId;
-    private String answerText;
     private String retailerId;
     private String questionId;
+    private String answerText;
     private long updatedAt;
 
-    public AnswerEntity(String answerId, String answerText, String retailerId, String questionId, long updatedAt) {
+    public AnswerEntity(String answerId, String retailerId, String questionId, String answerText, long updatedAt) {
         this.answerId = answerId;
-        this.answerText = answerText;
         this.retailerId = retailerId;
         this.questionId = questionId;
+        this.answerText = answerText;
         this.updatedAt = updatedAt;
     }
 
     public AnswerEntity(){
+
     }
 
     public String getAnswerId() {
@@ -28,14 +29,6 @@ public class AnswerEntity {
 
     public void setAnswerId(String answerId) {
         this.answerId = answerId;
-    }
-
-    public String getAnswerText() {
-        return answerText;
-    }
-
-    public void setAnswerText(String answerText) {
-        this.answerText = answerText;
     }
 
     public String getRetailerId() {
@@ -52,6 +45,14 @@ public class AnswerEntity {
 
     public void setQuestionId(String questionId) {
         this.questionId = questionId;
+    }
+
+    public String getAnswerText() {
+        return answerText;
+    }
+
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
     }
 
     public long getUpdatedAt() {
