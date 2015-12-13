@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -24,36 +25,22 @@ import com.shopchat.consumer.fragments.HomeFragment;
 import com.shopchat.consumer.fragments.InboxFragment;
 import com.shopchat.consumer.fragments.ProfileFragment;
 import com.shopchat.consumer.fragments.ShopChatNavigationFragment;
-import com.shopchat.consumer.listener.ChatListener;
 import com.shopchat.consumer.listener.CityListener;
-import com.shopchat.consumer.listener.NewMessageCountListener;
 import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.managers.SharedPreferenceManager;
-import com.shopchat.consumer.models.ChatDisplayModel;
 import com.shopchat.consumer.models.CityModel;
 import com.shopchat.consumer.models.ErrorModel;
 import com.shopchat.consumer.models.ProductModel;
-import com.shopchat.consumer.models.RetailerModel;
-import com.shopchat.consumer.models.entities.AnswerEntity;
-import com.shopchat.consumer.models.entities.QuestionEntity;
 import com.shopchat.consumer.services.InboxDataService;
-import com.shopchat.consumer.task.ChatTask;
 import com.shopchat.consumer.task.CityTask;
-import com.shopchat.consumer.task.NewMessageCountTask;
 import com.shopchat.consumer.utils.Constants;
 import com.shopchat.consumer.utils.Utils;
 import com.shopchat.consumer.views.ActionBarHome;
 import com.shopchat.consumer.views.CustomProgress;
 import com.shopchat.consumer.views.SlidingTabLayout;
 
-import org.apache.commons.collections4.MultiMap;
-import org.apache.commons.collections4.map.MultiValueMap;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Sudipta on 8/7/2015.
@@ -62,6 +49,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 
     public static Context mLandingActivityContext;
     public static LoaderManager supportLoaderManager;
+    public static FragmentManager supportFragmentManager;
     public static Resources resources;
     public static String CALLING_ACTIVITY = "calling_activity";
     public static String PRODUCT = "product";
@@ -100,6 +88,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         mLandingActivityContext = LandingActivity.this;
         supportLoaderManager = getSupportLoaderManager();
         resources = getResources();
+        supportFragmentManager = getSupportFragmentManager();
 
         dataBaseManager = new DataBaseManager(mLandingActivityContext);
 
@@ -112,7 +101,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
         mNavigationDrawerFragment.closeNavigationDrawer();
 
         // Initiate loader to start loading inbox data
-        getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_INBOX_DATA), null, this).forceLoad();
+        getSupportLoaderManager().initLoader(Constants.LOADER_INBOX_DATA, null, this).forceLoad();
 
         initViews();
         // initChatFetchTask("0", false, false);
@@ -572,12 +561,12 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
 
     @Override
     public Loader<String> onCreateLoader(int id, Bundle args) {
-        if(id == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
+        if(id == Constants.LOADER_INBOX_DATA){
             Toast.makeText(getApplicationContext(), "Inbox data loader initiated", Toast.LENGTH_SHORT).show();
             InboxDataLoader inboxDataLoader = new InboxDataLoader(getApplicationContext());
             inboxDataLoader.setPageNumber(0);
             return inboxDataLoader;
-        }else if(id == getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA)){
+        }else if(id == Constants.LOADER_POLL_INBOX_DATA){
             Toast.makeText(getApplicationContext(), "Looking for new messages....", Toast.LENGTH_SHORT).show();
             PollInboxDataLoader pollInboxDataLoader = new PollInboxDataLoader(getApplicationContext());
             return pollInboxDataLoader;
@@ -587,17 +576,16 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
             return noResourceLoader;
         }
 
-
     }
 
     @Override
     public void onLoadFinished(Loader<String> loader, String data) {
 
-        if(loader.getId() == getResources().getInteger(R.integer.LOADER_INBOX_DATA)){
+        if(loader.getId() == Constants.LOADER_INBOX_DATA){
             // Initiate loader to start loading inbox data
-            getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA), null, this).forceLoad();
-        }else if(loader.getId() == getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA)){
-            getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.LOADER_POLL_INBOX_DATA), null, this).forceLoad();
+            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
+        }else if(loader.getId() == Constants.LOADER_POLL_INBOX_DATA){
+            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
         }
 
     }
@@ -689,4 +677,5 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
     public void onInboxFragmentInteraction() {
 
     }
+
 }
