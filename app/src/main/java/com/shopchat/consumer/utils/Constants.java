@@ -43,4 +43,10 @@ public class Constants {
     public static int SELECTED_POSITION = -1;
 
 
+    public static final int LOADER_INBOX_DATA = 1;
+    public static final int LOADER_POLL_INBOX_DATA = 2;
+    public static final int LOADER_ADAPTER_INBOX_MESSAGE = 3;
+    public static final int LOADER_QUESTION_DETAILS = 4;
+    public static final int TAG_INBOX_LIST_QUESTION = 100;
+
 }
