@@ -4,6 +4,7 @@
     <integer name="LOADER_INBOX_DATA">1</integer>
     <integer name="LOADER_POLL_INBOX_DATA">2</integer>
     <integer name="LOADER_ADAPTER_INBOX_MESSAGE">3</integer>
+    <integer name="LOADER_QUESTION_DETAILS">4</integer>
 
     <integer name="TAG_INBOX_LIST_QUESTION">100</integer>
 
