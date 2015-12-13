@@ -13,7 +13,9 @@ import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.managers.SharedPreferenceManager;
 import com.shopchat.consumer.models.LoginModel;
 import com.shopchat.consumer.models.entities.AnswerEntity;
+import com.shopchat.consumer.models.entities.InboxMessageDetailEntity;
 import com.shopchat.consumer.models.entities.InboxMessageEntity;
+import com.shopchat.consumer.models.entities.MessageUnitEntity;
 import com.shopchat.consumer.models.entities.ProductEntity;
 import com.shopchat.consumer.models.entities.QuestionEntity;
 import com.shopchat.consumer.models.entities.RetailerEntity;
@@ -179,6 +181,7 @@ public class InboxDataService {
             productEntity.setProductDescription(productPojo.getProductDescription());
             productEntity.setImageurl(productPojo.getImageurl());
 
+            Log.v("debug@@", "product->" + productEntity.getProductId() + "--" + productEntity.getProductName());
             if(this.dataBaseManager.getProductEntityFromProductId(productEntity.getProductId()) == null){
                 this.dataBaseManager.addProductEntity(productEntity);
             }
@@ -188,6 +191,7 @@ public class InboxDataService {
             questionEntity.setProductId(questionPojo.getProduct().getId());
             questionEntity.setUpdatedAt(System.currentTimeMillis()/1000l);
             // Store question in db
+            Log.v("debug@@", "question->" + questionEntity.getQuestionId() + "--" + questionEntity.getQuestionText());
             if(this.dataBaseManager.getQuestionEntityFromQuestionId(questionEntity.getQuestionId()) == null){
                 this.dataBaseManager.addQuestionEntity(questionEntity);
             }
@@ -204,6 +208,7 @@ public class InboxDataService {
                 retailerEntity.setRetailerId(retailerPojo.getId());
                 retailerEntity.setShopName(retailerPojo.getShopName());
                 // Store retailer in db
+                Log.v("debug@@", "retailer->" + retailerEntity.getRetailerId() + "--" + retailerEntity.getShopName());
                 if(this.dataBaseManager.getRetailerEntityFromRetailerId(retailerEntity.getRetailerId()) == null){
                     this.dataBaseManager.addRetailerEntity(retailerEntity);
                 }
@@ -214,8 +219,11 @@ public class InboxDataService {
                 answerEntity.setQuestionId(questionEntity.getQuestionId());
                 answerEntity.setUpdatedAt(System.currentTimeMillis()/1000l);
                 // Store answer in db
+                Log.v("debug@@", "answer->" + answerEntity.getAnswerId() + "--" + answerEntity.getAnswerText());
                 if(this.dataBaseManager.getAnswerEntityFromAnswerId(answerEntity.getAnswerId()) == null){
                     this.dataBaseManager.addAnswerEntity(answerEntity);
+                }else{
+                    this.dataBaseManager.updateAnswerEntity(answerEntity);
                 }
 
             }
@@ -267,8 +275,6 @@ public class InboxDataService {
             }
         }
 
-
-
         return newUpdates;
     }
 
@@ -296,6 +302,63 @@ public class InboxDataService {
             inboxMessageEntities.add(inboxMessageEntity);
         }
         return inboxMessageEntities;
+    }
+
+    public InboxMessageDetailEntity getMessageDetailFromQuestionId(String questionId){
+
+        InboxMessageDetailEntity inboxMessageDetailEntity = new InboxMessageDetailEntity();
+        MessageUnitEntity questionMessageUnitEntity = new MessageUnitEntity();
+        ArrayList<MessageUnitEntity> answersMessageUnitEntity = new ArrayList<MessageUnitEntity>();
+        ArrayList<AnswerEntity> answerEntities = new ArrayList<AnswerEntity>();
+        AnswerEntity answerEntity;
+        MessageUnitEntity answerMessageUnitEntity;
+        RetailerEntity retailerEntity;
+
+        this.dataBaseManager = new DataBaseManager(this.getContext());
+
+        if(questionId != null && this.context != null){
+
+            QuestionEntity questionEntity = this.dataBaseManager.getQuestionEntityFromQuestionId(questionId);
+            questionMessageUnitEntity.setSpeaker("You");
+            questionMessageUnitEntity.setMessage(questionEntity.getQuestionText());
+            questionMessageUnitEntity.setWrittenAt(String.valueOf(questionEntity.getUpdatedAt())); //TODO: Change from epoch to DateTime
+            questionMessageUnitEntity.setIsQuestion(true);
+            questionMessageUnitEntity.setIsAnswer(false);
+            questionMessageUnitEntity.setReferenceId(questionId);
+
+            answerEntities = this.dataBaseManager.getAnswerEntitiesFromQuestionId(questionId);
+
+
+            for(int index = 0; index < answerEntities.size(); index++){
+                answerEntity = new AnswerEntity();
+                answerMessageUnitEntity = new MessageUnitEntity();
+                retailerEntity = new RetailerEntity();
+
+                answerEntity = answerEntities.get(index);
+                retailerEntity = this.dataBaseManager.getRetailerEntityFromRetailerId(answerEntity.getRetailerId());
+
+//                try{
+//
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                    answerMessageUnitEntity.setSpeaker("Retailer");
+//                } // TODO: Check why there is no retailer in DB
+                Log.v("debug@@11", retailerEntity.getRetailerId() + retailerEntity.getShopName());
+                answerMessageUnitEntity.setSpeaker(retailerEntity.getShopName());
+                answerMessageUnitEntity.setMessage(answerEntity.getAnswerText());
+                answerMessageUnitEntity.setWrittenAt(String.valueOf(answerEntity.getUpdatedAt()));
+                answerMessageUnitEntity.setIsQuestion(false);
+                answerMessageUnitEntity.setIsAnswer(true);
+                answerMessageUnitEntity.setReferenceId(answerEntity.getAnswerId());
+
+                answersMessageUnitEntity.add(answerMessageUnitEntity);
+            }
+
+            inboxMessageDetailEntity.setQuestionMessageUnitEntity(questionMessageUnitEntity);
+            inboxMessageDetailEntity.setAnswersMessageUnitEntity(answersMessageUnitEntity);
+            return inboxMessageDetailEntity;
+        }
+        return null;
     }
 
 }
