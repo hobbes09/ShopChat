@@ -32,6 +32,7 @@ import com.shopchat.consumer.models.CityModel;
 import com.shopchat.consumer.models.ErrorModel;
 import com.shopchat.consumer.models.ProductModel;
 import com.shopchat.consumer.services.InboxDataService;
+import com.shopchat.consumer.services.InboxDataSyncIntentService;
 import com.shopchat.consumer.task.CityTask;
 import com.shopchat.consumer.utils.Constants;
 import com.shopchat.consumer.utils.Utils;
@@ -582,16 +583,28 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
     public void onLoadFinished(Loader<String> loader, String data) {
 
         if(loader.getId() == Constants.LOADER_INBOX_DATA){
+
+            // Call intent service to sync data
+            Intent messageSyncIntent = new Intent(this, InboxDataSyncIntentService.class);
+            messageSyncIntent.putExtra(InboxDataSyncIntentService.SERVICE_TYPE,
+                    InboxDataSyncIntentService.INBOX_POLLED_MESSAGE_SYNC_SERVICE);
+            this.startService(messageSyncIntent);
+            Log.d("Sync>>>", "sync started...");
             // Initiate loader to start loading inbox data
-            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
-        }else if(loader.getId() == Constants.LOADER_POLL_INBOX_DATA){
-            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
+//            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
         }
+//        else if(loader.getId() == Constants.LOADER_POLL_INBOX_DATA){
+//            onLoaderReset(loader);
+//            getSupportLoaderManager().initLoader(Constants.LOADER_POLL_INBOX_DATA, null, this).forceLoad();
+//        }
 
     }
 
     @Override
     public void onLoaderReset(Loader<String> loader) {
+        if(loader.getId() == Constants.LOADER_POLL_INBOX_DATA){
+            loader = null;
+        }
     }
 
     private static class InboxDataLoader extends AsyncTaskLoader<String>{
@@ -643,6 +656,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
                 numNewMessage = inboxDataService.getNumberOfUpdatedQuestions();
                 Log.v("LokatChat", "Number of new messages polled = " + String.valueOf(numNewMessage));
             }
+
             if(numNewMessage > 0){
                 Log.v("LokatChat", "Fetching new messages : " + String.valueOf(numNewMessage));
                 SharedPreferences.Editor editor = SharedPreferenceManager.getSharedPreferenceEditor(LandingActivity.mLandingActivityContext);
@@ -656,6 +670,7 @@ public class LandingActivity extends BaseActivity implements ActionBarHome.OnAct
                 }
 
             }
+
             return null;
         }
     }
