@@ -189,10 +189,13 @@ public class InboxDataService {
             questionEntity.setQuestionId(questionPojo.getId());
             questionEntity.setQuestionText(questionPojo.getQuestionText());
             questionEntity.setProductId(questionPojo.getProduct().getId());
+            questionEntity.setSeen(1);
             questionEntity.setUpdatedAt(System.currentTimeMillis()/1000l);
             // Store question in db
             Log.v("debug@@", "question->" + questionEntity.getQuestionId() + "--" + questionEntity.getQuestionText());
             if(this.dataBaseManager.getQuestionEntityFromQuestionId(questionEntity.getQuestionId()) == null){
+                // Mark question as unread
+                questionEntity.setSeen(0);
                 this.dataBaseManager.addQuestionEntity(questionEntity);
             }
 
@@ -222,6 +225,12 @@ public class InboxDataService {
                 Log.v("debug@@", "answer->" + answerEntity.getAnswerId() + "--" + answerEntity.getAnswerText());
                 if(this.dataBaseManager.getAnswerEntityFromAnswerId(answerEntity.getAnswerId()) == null){
                     this.dataBaseManager.addAnswerEntity(answerEntity);
+                    QuestionEntity questionEntity1 = this.dataBaseManager.getQuestionEntityFromQuestionId(questionEntity.getQuestionId());
+                    if(questionEntity1 != null){
+                        // Mark question as unread
+                        questionEntity1.setSeen(0);
+                        this.dataBaseManager.updateQuestionEntity(questionEntity1);
+                    }
                 }else{
                     this.dataBaseManager.updateAnswerEntity(answerEntity);
                 }
@@ -296,6 +305,7 @@ public class InboxDataService {
 
             inboxMessageEntity = new InboxMessageEntity();
             inboxMessageEntity.setQuestionId(questionEntity.getQuestionId());
+            inboxMessageEntity.setSeen(questionEntity.getSeen());
             inboxMessageEntity.setMessageDetail(questionEntity.getQuestionText());
             inboxMessageEntity.setMessageHeader(productEntity.getProductName());
 
@@ -337,13 +347,6 @@ public class InboxDataService {
                 answerEntity = answerEntities.get(index);
                 retailerEntity = this.dataBaseManager.getRetailerEntityFromRetailerId(answerEntity.getRetailerId());
 
-//                try{
-//
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                    answerMessageUnitEntity.setSpeaker("Retailer");
-//                } // TODO: Check why there is no retailer in DB
-                Log.v("debug@@11", retailerEntity.getRetailerId() + retailerEntity.getShopName());
                 answerMessageUnitEntity.setSpeaker(retailerEntity.getShopName());
                 answerMessageUnitEntity.setMessage(answerEntity.getAnswerText());
                 answerMessageUnitEntity.setWrittenAt(String.valueOf(answerEntity.getUpdatedAt()));

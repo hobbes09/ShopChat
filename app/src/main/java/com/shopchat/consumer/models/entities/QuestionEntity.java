@@ -8,12 +8,14 @@ public class QuestionEntity {
     private String questionId;
     private String productId;
     private String questionText;
+    private int seen;
     private long updatedAt;
 
-    public QuestionEntity(String questionId, String productId, String questionText, long updatedAt) {
+    public QuestionEntity(String questionId, String productId, String questionText, int seen, long updatedAt) {
         this.questionId = questionId;
         this.productId = productId;
         this.questionText = questionText;
+        this.seen = seen;
         this.updatedAt = updatedAt;
     }
 
@@ -42,6 +44,14 @@ public class QuestionEntity {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
+    }
+
+    public int getSeen() {
+        return seen;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
     }
 
     public long getUpdatedAt() {

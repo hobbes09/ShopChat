@@ -133,6 +133,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             InboxMessageListAdapter inboxMessageListAdapter = new InboxMessageListAdapter(LandingActivity.mLandingActivityContext, data);
             lvInboxMessageList.setAdapter(inboxMessageListAdapter);
             // inboxMessageListAdapter.notifyDataSetChanged();
+            // TODO:: Make the list adapter class variable from local
         }
     }
 
@@ -140,6 +141,7 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onLoaderReset(Loader<ArrayList<InboxMessageEntity>> loader) {
         loader = null;
     }
+
 
     private static class InboxMessageListLoader extends AsyncTaskLoader<ArrayList<InboxMessageEntity>>{
 

@@ -7,16 +7,17 @@ public class InboxMessageEntity {
 
     private String messageHeader;
     private String messageDetail;
+    private int seen;
     private String questionId;
 
-    public InboxMessageEntity(){
-    }
-
-    public InboxMessageEntity(String messageHeader, String messageDetail, String questionId) {
+    public InboxMessageEntity(String messageHeader, String messageDetail, int seen, String questionId) {
         this.messageHeader = messageHeader;
         this.messageDetail = messageDetail;
+        this.seen = seen;
         this.questionId = questionId;
     }
+
+    public InboxMessageEntity(){}
 
     public String getMessageHeader() {
         return messageHeader;
@@ -32,6 +33,14 @@ public class InboxMessageEntity {
 
     public void setMessageDetail(String messageDetail) {
         this.messageDetail = messageDetail;
+    }
+
+    public int getSeen() {
+        return seen;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
     }
 
     public String getQuestionId() {

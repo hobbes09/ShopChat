@@ -21,7 +21,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     // Database Name
     private static final String DATABASE_NAME = "LokalChatDB";
@@ -36,6 +36,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
     private static final String KEY_QUESTION_ID = "question_id";
     private static final String KEY_QUESTION_PRODUCT_ID = "product_id";
     private static final String KEY_QUESTION_TEXT = "question_text";
+    private static final String KEY_QUESTION_SEEN = "seen";
     private static final String KEY_QUESTION_UPDATED_AT = "updated_at";
 
     // Answer Table Columns names
@@ -69,6 +70,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
                 KEY_QUESTION_ID + " VARCHAR(255) PRIMARY KEY, " +
                 KEY_QUESTION_PRODUCT_ID + " VARCHAR(255), " +
                 KEY_QUESTION_TEXT + " VARCHAR(255), " +
+                KEY_QUESTION_SEEN + " INT NOT NULL DEFAULT 1 CHECK( " + KEY_QUESTION_SEEN + " IN (0, 1) ), " +
                 KEY_QUESTION_UPDATED_AT +" BIGINT UNSIGNED NOT NULL )";
 
         String CREATE_ANSWER_TABLE = "CREATE TABLE " + TABLE_ANSWER + " (" +
@@ -125,6 +127,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
         values.put(KEY_QUESTION_ID, questionEntity.getQuestionId());
         values.put(KEY_QUESTION_PRODUCT_ID, questionEntity.getProductId());
         values.put(KEY_QUESTION_TEXT, questionEntity.getQuestionText());
+        values.put(KEY_QUESTION_SEEN, questionEntity.getSeen());
         values.put(KEY_QUESTION_UPDATED_AT, questionEntity.getUpdatedAt());
 
         // Inserting Row
@@ -136,11 +139,11 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public QuestionEntity getQuestionEntityFromQuestionId(String questionId) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
-        Cursor cursor = sqLiteDatabase.query(TABLE_QUESTION, new String[] { KEY_QUESTION_ID, KEY_QUESTION_PRODUCT_ID, KEY_QUESTION_TEXT, KEY_QUESTION_UPDATED_AT}
+        Cursor cursor = sqLiteDatabase.query(TABLE_QUESTION, new String[] { KEY_QUESTION_ID, KEY_QUESTION_PRODUCT_ID, KEY_QUESTION_TEXT, KEY_QUESTION_SEEN, KEY_QUESTION_UPDATED_AT}
                 , KEY_QUESTION_ID + "=?", new String[] { String.valueOf(questionId) }, null, null, null, null);
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
-            QuestionEntity questionEntity = new QuestionEntity(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
+            QuestionEntity questionEntity = new QuestionEntity(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getInt(4));
             // return questionEntity
             return questionEntity;
         }else{
@@ -160,7 +163,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                QuestionEntity questionEntity = new QuestionEntity(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
+                QuestionEntity questionEntity = new QuestionEntity(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getInt(4));
                 // Adding product to list
                 questionEntities.add(questionEntity);
             } while (cursor.moveToNext());
@@ -191,6 +194,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
         values.put(KEY_QUESTION_ID, questionEntity.getQuestionId());
         values.put(KEY_QUESTION_PRODUCT_ID, questionEntity.getProductId());
         values.put(KEY_QUESTION_TEXT, questionEntity.getQuestionText());
+        values.put(KEY_QUESTION_SEEN, questionEntity.getSeen());
         values.put(KEY_QUESTION_UPDATED_AT, questionEntity.getUpdatedAt());
 
         // updating row
@@ -231,7 +235,6 @@ public class DataBaseManager extends SQLiteOpenHelper {
         values.put(KEY_ANSWER_QUESTION_ID, answerEntity.getQuestionId());
         values.put(KEY_ANSWER_TEXT, answerEntity.getAnswerText());
         values.put(KEY_ANSWER_UPDATED_AT, answerEntity.getUpdatedAt());
-
         // Inserting Row
         sqLiteDatabase.insert(TABLE_ANSWER, null, values);
         sqLiteDatabase.close(); // Closing database connection

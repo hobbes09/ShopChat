@@ -2,6 +2,7 @@ package com.shopchat.consumer.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 import com.shopchat.consumer.R;
 import com.shopchat.consumer.activities.InboxMessageDetailActivity;
 import com.shopchat.consumer.activities.LandingActivity;
+import com.shopchat.consumer.managers.DataBaseManager;
 import com.shopchat.consumer.models.entities.InboxMessageEntity;
+import com.shopchat.consumer.models.entities.QuestionEntity;
 
 import java.util.ArrayList;
 
@@ -61,7 +64,7 @@ public class InboxMessageListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
-        Holder holder=new Holder();
+        final Holder holder=new Holder();
         final View rowView;
 
         rowView = layoutInflater.inflate(R.layout.list_row_inbox, null);
@@ -73,17 +76,30 @@ public class InboxMessageListAdapter extends BaseAdapter {
         holder.tvMessageLogo.setText(String.valueOf(this.inboxMessageEntities.get(position).getMessageHeader().toCharArray()[0]));
         holder.tvMessageHeader.setText(this.inboxMessageEntities.get(position).getMessageHeader());
         holder.tvMessageDetails.setText(this.inboxMessageEntities.get(position).getMessageDetail());
+        if(this.inboxMessageEntities.get(position).getSeen() == 0){
+            holder.tvMessageHeader.setTypeface(null, Typeface.BOLD);
+        }
 
         rowView.setTag(this.inboxMessageEntities.get(position).getQuestionId());
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Update db, mark this question as seen
+                DataBaseManager dataBaseManager = new DataBaseManager(LandingActivity.mLandingActivityContext);
+                QuestionEntity questionEntityToBeMarkedSeen = dataBaseManager.getQuestionEntityFromQuestionId(rowView.getTag().toString());
+                questionEntityToBeMarkedSeen.setSeen(1);
+                dataBaseManager.updateQuestionEntity(questionEntityToBeMarkedSeen);
+
+                // Mark as read
+                holder.tvMessageHeader.setTypeface(null, Typeface.NORMAL);
+
                 Log.v("Inbox>>>", "You clicked :" + rowView.getTag());
                 Intent launchInboxMessageDetailActivity = new Intent(LandingActivity.mLandingActivityContext, InboxMessageDetailActivity.class);
                 Bundle questionInformation = new Bundle();
                 questionInformation.putString("QUESTION_ID", rowView.getTag().toString());
                 launchInboxMessageDetailActivity.putExtras(questionInformation);
                 LandingActivity.mLandingActivityContext.startActivity(launchInboxMessageDetailActivity);
+
             }
         });
         return rowView;
