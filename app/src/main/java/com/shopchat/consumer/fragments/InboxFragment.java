@@ -75,10 +75,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onViewCreated(view, savedInstanceState);
 
         initViews(view);
-        // Initializing the inbox list
-        LandingActivity.supportLoaderManager.initLoader(getResources()
-                .getInteger(R.integer.LOADER_ADAPTER_INBOX_MESSAGE), null, this).forceLoad();
-
     }
 
     private void initViews(View view) {
@@ -93,6 +89,14 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Initializing the inbox list
+        LandingActivity.supportLoaderManager.initLoader(getResources()
+                .getInteger(R.integer.LOADER_ADAPTER_INBOX_MESSAGE), null, this).forceLoad();
     }
 
     public void onButtonPressed(Uri uri) {
@@ -167,10 +171,6 @@ public class InboxFragment extends Fragment implements LoaderManager.LoaderCallb
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
         public void onInboxFragmentInteraction();
